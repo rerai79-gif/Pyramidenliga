@@ -4,6 +4,11 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
+  const [members, setMembers] = useState([
+  { id: 1, name: 'Max Mustermann', role: 'Spieler' },
+]);
+
+const [newMember, setNewMember] = useState('');
   const players = [
     { rank: 1, name: 'Spieler A', level: 1, lastDefense: '08.05.2026', elo: 1880 },
     { rank: 2, name: 'Spieler B', level: 2, lastDefense: '05.05.2026', elo: 1810 },
@@ -115,33 +120,71 @@ export default function App() {
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-            <h2 className="text-2xl font-bold mb-6">
-              Mitgliederverwaltung
-            </h2>
+<div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+  <h2 className="text-2xl font-bold mb-6">
+    Mitgliederverwaltung
+  </h2>
 
-            <div className="space-y-4">
-              <div className="bg-zinc-800 rounded-2xl p-4 flex items-center justify-between">
-                <div>
-                  <div className="font-semibold">
-                    Max Mustermann
-                  </div>
+  <div className="flex gap-3 mb-5">
+    <input
+      type="text"
+      placeholder="Neues Mitglied"
+      value={newMember}
+      onChange={(e) => setNewMember(e.target.value)}
+      className="flex-1 bg-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 outline-none"
+    />
 
-                  <div className="text-sm text-zinc-400">
-                    Spieler • Aktiv
-                  </div>
-                </div>
+    <button
+      onClick={() => {
+        if (!newMember.trim()) return;
 
-                <button className="bg-zinc-700 px-4 py-2 rounded-xl">
-                  Verwalten
-                </button>
-              </div>
+        setMembers([
+          ...members,
+          {
+            id: Date.now(),
+            name: newMember,
+            role: 'Spieler',
+          },
+        ]);
 
-              <button className="w-full bg-emerald-600 hover:bg-emerald-700 py-4 rounded-2xl">
-                Mitglied hinzufügen
-              </button>
-            </div>
+        setNewMember('');
+      }}
+      className="bg-emerald-600 hover:bg-emerald-700 px-5 rounded-2xl"
+    >
+      Hinzufügen
+    </button>
+  </div>
+
+  <div className="space-y-3">
+    {members.map((member) => (
+      <div
+        key={member.id}
+        className="bg-zinc-800 rounded-2xl p-4 flex items-center justify-between"
+      >
+        <div>
+          <div className="font-semibold">
+            {member.name}
           </div>
+
+          <div className="text-sm text-zinc-400">
+            {member.role}
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            setMembers(
+              members.filter((m) => m.id !== member.id)
+            );
+          }}
+          className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl"
+        >
+          Entfernen
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
             <h2 className="text-2xl font-bold mb-6">
